@@ -123,6 +123,26 @@ TEST_CASE(
 {
 	std::vector<std::string> tokens;
 
+	tokens = utils::tokenize_quoted(R"_("")_");
+	REQUIRE(tokens.size() == 1);
+	REQUIRE(tokens[0] == "");
+
+	tokens = utils::tokenize_quoted(R"_("\\")_");
+	REQUIRE(tokens.size() == 1);
+	REQUIRE(tokens[0] == R"_(\)_");
+
+	tokens = utils::tokenize_quoted(R"_("#\\")_");
+	REQUIRE(tokens.size() == 1);
+	REQUIRE(tokens[0] == R"_(#\)_");
+
+	tokens = utils::tokenize_quoted(R"_("'#\\'")_");
+	REQUIRE(tokens.size() == 1);
+	REQUIRE(tokens[0] == R"_('#\')_");
+
+	tokens = utils::tokenize_quoted(R"_("'#\\ \\'")_");
+	REQUIRE(tokens.size() == 1);
+	REQUIRE(tokens[0] == R"_('#\ \')_");
+
 	tokens = utils::tokenize_quoted("\"\\\\\\\\");
 	REQUIRE(tokens.size() == 1);
 	REQUIRE(tokens[0] == "\\\\");
